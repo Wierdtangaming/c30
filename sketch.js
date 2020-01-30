@@ -7,6 +7,8 @@ var engine, world;
 var box1, pig1;
 var backgroundImg,platform;
 var bird, slingShot;
+var count;
+var count_down;
 
 function preload() {
     backgroundImg = loadImage("sprites/bg.png");
@@ -17,7 +19,7 @@ function setup(){
     engine = Engine.create();
     world = engine.world;
 
-
+    count  = 200;
     ground = new Ground(600,height,1200,20);
     platform = new Ground(150, 305, 300, 170);
 
@@ -38,14 +40,14 @@ function setup(){
 
     bird = new Bird(200,50);
 
-    //log6 = new Log(230,180,80, PI/2);
+    log6 = new Log(230,180,80, PI/2);
     slingshot = new SlingShot(bird.body,{x:200, y:50});
 }
 
 function draw(){
     background(backgroundImg);
     Engine.update(engine);
-    //strokeWeight(4);
+    strokeWeight(4);
     box1.display();
     box2.display();
     ground.display();
@@ -57,21 +59,36 @@ function draw(){
     pig3.display();
     log3.display();
 
-    box5.display();
-    log4.display();
+   box5.display();
+   log4.display();
     log5.display();
-
+    console.log(count);
     bird.display();
     platform.display();
     //log6.display();
     slingshot.display();    
+    if (count_down === true) {
+        count--;
+        if (count === 0) {
+            count_down = false;
+        }
+    }
 }
 
 function mouseDragged(){
+ 
     Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
+
 }
 
+function keyPressed() {
+    if(count === 0 && keyCode === 32) {
+    slingshot.attach(bird.body);
+    count = 200;
+    }
+}
 
 function mouseReleased(){
     slingshot.fly();
+    count_down = true;
 }
